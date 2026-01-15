@@ -1,2 +1,4 @@
-# No external dependencies required
-# Python 3.6+ standard library only
+# Dependencies for MP4 to MP3 converter
+moviepy>=1.0.3
+
+# Other tools use Python 3.6+ standard library only
