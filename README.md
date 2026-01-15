@@ -60,7 +60,42 @@ python mp4_to_mp3.py batch ./videos
 python mp4_to_mp3.py batch ./videos ./audio_output
 ```
 
-### 3. QR Code Generator
+### 3. File Compressor
+
+Compress video and audio files to a target file size (perfect for keeping files under size limits like 31 MB).
+
+**Features:**
+- Compress videos to target file size (default: 31 MB)
+- Compress audio files with automatic bitrate calculation
+- Multiple quality presets (low/medium/high)
+- Smart resolution and FPS adjustment
+- Supports multiple formats (MP4, AVI, MOV, MKV, MP3, WAV)
+- Detailed compression statistics
+
+**Usage:**
+```bash
+# Compress video to 31 MB (default)
+python file_compressor.py video.mp4
+
+# Compress to specific size
+python file_compressor.py video.mp4 --size 25
+
+# Compress with quality settings
+python file_compressor.py video.mp4 --quality low      # 360p, smallest
+python file_compressor.py video.mp4 --quality medium   # 720p, balanced
+python file_compressor.py video.mp4 --quality high     # original res
+
+# Compress with custom output name
+python file_compressor.py video.mp4 compressed.mp4
+
+# Compress audio files
+python file_compressor.py audio.mp3 --size 10
+
+# Combine options
+python file_compressor.py video.mp4 --size 20 --quality low
+```
+
+### 4. QR Code Generator
 
 An enhanced web-based QR code generator with multiple features (see qr-generator.html).
 
@@ -84,3 +119,9 @@ pip install -r requirements.txt
 - Audio quality presets
 - Metadata preservation
 - Trim/cut audio before export
+
+**File Compressor:**
+- Two-pass encoding for better quality
+- Batch compression for directories
+- Preview mode to estimate output size
+- Custom codec selection
