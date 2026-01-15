@@ -95,7 +95,47 @@ python file_compressor.py audio.mp3 --size 10
 python file_compressor.py video.mp4 --size 20 --quality low
 ```
 
-### 4. QR Code Generator
+### 4. Audio Transcription Tool
+
+Transcribe audio files to text using OpenAI's Whisper AI model.
+
+**Features:**
+- Transcribe MP3, WAV, M4A, and other audio formats to text
+- Multiple model sizes (tiny to large) for speed vs accuracy tradeoff
+- Automatic language detection or manual specification
+- Timestamped transcripts with segment breakdowns
+- Supports 99+ languages
+- Works offline after initial model download
+
+**Usage:**
+```bash
+# Basic transcription (uses 'base' model)
+python transcribe.py interview.mp3
+
+# With custom output file
+python transcribe.py podcast.mp3 transcript.txt
+
+# Higher accuracy (slower, uses more RAM)
+python transcribe.py lecture.mp3 --model medium
+
+# Faster transcription (less accurate)
+python transcribe.py audio.mp3 --model tiny
+
+# Specify language for better accuracy
+python transcribe.py spanish_audio.mp3 --language es
+
+# Combine options
+python transcribe.py audio.mp3 output.txt --model small --language en
+```
+
+**Model Sizes:**
+- `tiny` - Fastest, ~1GB RAM, good for quick transcripts
+- `base` - Default, balanced speed and accuracy
+- `small` - Better accuracy, ~2GB RAM
+- `medium` - High accuracy, ~5GB RAM
+- `large` - Best accuracy, ~10GB RAM (slow)
+
+### 5. QR Code Generator
 
 An enhanced web-based QR code generator with multiple features (see qr-generator.html).
 
@@ -125,3 +165,9 @@ pip install -r requirements.txt
 - Batch compression for directories
 - Preview mode to estimate output size
 - Custom codec selection
+
+**Audio Transcription:**
+- Batch transcription for multiple files
+- Export to multiple formats (SRT, VTT for subtitles)
+- Speaker diarization (identify different speakers)
+- Real-time transcription from microphone

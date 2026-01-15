@@ -1,4 +1,7 @@
-# Dependencies for MP4 to MP3 converter
+# Dependencies for MP4 to MP3 converter and file compressor
 moviepy>=1.0.3
+
+# Dependencies for audio transcription
+openai-whisper>=20231117
 
 # Other tools use Python 3.6+ standard library only
