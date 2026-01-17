@@ -70,7 +70,8 @@ def convert_mp4_to_mp3(input_file, output_file=None, bitrate="192k"):
         # Write audio to MP3 file
         audio.write_audiofile(
             str(output_file),
-            bitrate=bitrate
+            bitrate=bitrate,
+            codec='mp3'
         )
 
         # Clean up
