@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { theme } from "./theme";
 import { Layout } from "./routes/Layout";
 import { Dashboard } from "./routes/Dashboard";
@@ -34,7 +34,7 @@ export default function App(): React.ReactElement {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Dashboard />} />
@@ -60,7 +60,7 @@ export default function App(): React.ReactElement {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }
