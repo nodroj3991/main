@@ -14,13 +14,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { CloudUpload as UploadIcon, Delete as DeleteIcon, Download as DownloadIcon } from "@mui/icons-material";
+import {
+  AutoFixHigh as FillIcon,
+  CloudUpload as UploadIcon,
+  Delete as DeleteIcon,
+  Download as DownloadIcon,
+} from "@mui/icons-material";
 import { useLiveQuery } from "dexie-react-hooks";
 import { nanoid } from "nanoid";
 import { db } from "../../db/db";
 import type { Template } from "../../db/schema";
 import { detectTemplate } from "../../features/templates/detect";
 import { downloadBlob } from "../../db/io";
+import { TemplateFillDialog } from "./TemplateFillDialog";
 
 const FORMATS: Template["format"][] = ["docx", "pptx", "xlsx", "csv", "json", "html", "txt"];
 const CATEGORIES: Template["category"][] = [
@@ -36,6 +42,7 @@ export function TemplatesPage(): React.ReactElement {
   const templates = useLiveQuery(() => db.templates.orderBy("createdAt").reverse().toArray(), []);
   const [error, setError] = useState<string | null>(null);
   const [working, setWorking] = useState(false);
+  const [fillFor, setFillFor] = useState<Template | null>(null);
 
   async function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     setError(null);
@@ -178,11 +185,15 @@ export function TemplatesPage(): React.ReactElement {
                 )}
               </TableCell>
               <TableCell>
-                <IconButton size="small" onClick={() => void downloadTemplate(t)}>
+                <IconButton size="small" title="Fill" onClick={() => setFillFor(t)}>
+                  <FillIcon fontSize="small" />
+                </IconButton>
+                <IconButton size="small" title="Download original" onClick={() => void downloadTemplate(t)}>
                   <DownloadIcon fontSize="small" />
                 </IconButton>
                 <IconButton
                   size="small"
+                  title="Delete"
                   onClick={async () => {
                     if (confirm(`Delete template "${t.name}"?`)) {
                       await db.blobs.delete(t.storedBlobId);
@@ -197,6 +208,14 @@ export function TemplatesPage(): React.ReactElement {
           ))}
         </TableBody>
       </Table>
+
+      {fillFor && (
+        <TemplateFillDialog
+          template={fillFor}
+          open={!!fillFor}
+          onClose={() => setFillFor(null)}
+        />
+      )}
     </Box>
   );
 }
