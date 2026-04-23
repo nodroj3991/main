@@ -73,8 +73,9 @@ export function Dashboard(): React.ReactElement {
         Dashboard
       </Typography>
       <Typography color="text.secondary" sx={{ mb: 3 }}>
-        Quick overview of your planning workspace. All data is stored locally in
-        your browser; use Import / Export to move it between machines.
+        Welcome to TOPS. All data lives locally in your browser — use Import /
+        Export to move it between machines. Seeded with a demo Animal Welfare
+        module on first load so you can explore right away.
       </Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 6, md: 3 }}>
