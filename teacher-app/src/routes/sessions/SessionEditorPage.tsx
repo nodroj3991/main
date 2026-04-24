@@ -18,9 +18,18 @@ import {
 import {
   Add as AddIcon,
   ArrowBack as BackIcon,
+  AutoAwesome as DraftIcon,
   Delete as DeleteIcon,
+  RateReview as ReviewIcon,
   Save as SaveIcon,
 } from "@mui/icons-material";
+import {
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link, useParams } from "react-router-dom";
 import { db } from "../../db/db";
@@ -36,6 +45,8 @@ import {
   type TmcMarker,
   type TmcPhase,
 } from "../../constants";
+import { draftSession, reviewSession } from "../../features/assistant/tools";
+import { getCachedKey } from "../../features/assistant/secureKey";
 
 function insertAtCaret(
   textarea: HTMLTextAreaElement,
@@ -132,6 +143,17 @@ export function SessionEditorPage(): React.ReactElement {
   const [draft, setDraft] = useState<Session | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewBody, setReviewBody] = useState("");
+  const [reviewBusy, setReviewBusy] = useState(false);
+
+  const hasKey = !!getCachedKey();
+
   useEffect(() => {
     if (session && (!draft || draft.id !== session.id)) {
       setDraft(session);
@@ -164,6 +186,67 @@ export function SessionEditorPage(): React.ReactElement {
     setTimeout(() => setMessage(null), 2000);
   }
 
+  async function runDraft() {
+    if (!draft) return;
+    setAiBusy(true);
+    setAiError(null);
+    try {
+      const result = await draftSession({
+        topic: aiTopic,
+        durationMin: draft.durationMin,
+        moduleName: module?.name,
+        groupName: group?.name,
+        ageGroup: group?.ageGroup,
+      });
+      setDraft((d) =>
+        d
+          ? {
+              ...d,
+              unit: result.unit || d.unit,
+              week: result.week || d.week,
+              lessonObjectives: result.lessonObjectives ?? d.lessonObjectives,
+              phases: { ...d.phases, ...(result.phases as Session["phases"]) },
+              embeddedMaths: result.embeddedMaths ?? d.embeddedMaths,
+              embeddedEnglish: result.embeddedEnglish ?? d.embeddedEnglish,
+              embeddedBritishValues: result.embeddedBritishValues ?? d.embeddedBritishValues,
+              embeddedDifferentiation: result.embeddedDifferentiation ?? d.embeddedDifferentiation,
+              embeddedIct: result.embeddedIct ?? d.embeddedIct,
+              careerLinks: result.careerLinks ?? d.careerLinks,
+              characterStrengths: {
+                ...d.characterStrengths,
+                ...(result.characterStrengths as Session["characterStrengths"]),
+              },
+              notes: result.notes || d.notes,
+            }
+          : d,
+      );
+      setAiOpen(false);
+      setAiTopic("");
+      setMessage("Draft applied. Review and Save.");
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAiBusy(false);
+    }
+  }
+
+  async function runReview() {
+    if (!draft) return;
+    setReviewBusy(true);
+    setReviewBody("");
+    try {
+      const feedback = await reviewSession({
+        session: draft,
+        moduleName: module?.name,
+      });
+      setReviewBody(feedback);
+    } catch (e) {
+      setReviewBody(`Error: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setReviewBusy(false);
+    }
+  }
+
   return (
     <Box>
       <Stack direction="row" alignItems="center" mb={2} spacing={1}>
@@ -179,6 +262,25 @@ export function SessionEditorPage(): React.ReactElement {
             {draft.week ? ` · ${draft.week}` : ""}
           </Typography>
         </Box>
+        <Button
+          startIcon={<DraftIcon />}
+          onClick={() => setAiOpen(true)}
+          disabled={!hasKey}
+          title={hasKey ? "Draft this session with AI" : "Add an Anthropic key in Settings first"}
+        >
+          Draft with AI
+        </Button>
+        <Button
+          startIcon={<ReviewIcon />}
+          onClick={() => {
+            setReviewOpen(true);
+            void runReview();
+          }}
+          disabled={!hasKey}
+          title={hasKey ? "Review this session with AI" : "Add an Anthropic key in Settings first"}
+        >
+          Review
+        </Button>
         <Button startIcon={<SaveIcon />} variant="contained" onClick={save}>
           Save
         </Button>
@@ -478,6 +580,54 @@ export function SessionEditorPage(): React.ReactElement {
           </Button>
         </Stack>
       </Stack>
+
+      <Dialog open={aiOpen} onClose={() => setAiOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Draft this session with AI</DialogTitle>
+        <DialogContent>
+          <Typography color="text.secondary" sx={{ mb: 2 }}>
+            Describe the topic in your own words. The assistant uses the module
+            and group context to fill every TMC phase plus the embedded skills.
+            You'll still see each field before saving.
+          </Typography>
+          <TextField
+            label="Topic"
+            value={aiTopic}
+            onChange={(e) => setAiTopic(e.target.value)}
+            fullWidth
+            multiline
+            minRows={3}
+            placeholder="e.g. Introduction to the Five Freedoms of Animal Welfare, with a practical bedding check activity."
+          />
+          {aiError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {aiError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAiOpen(false)}>Cancel</Button>
+          <Button variant="contained" disabled={aiBusy || !aiTopic.trim()} onClick={runDraft}>
+            {aiBusy ? "Drafting…" : "Draft"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={reviewOpen} onClose={() => setReviewOpen(false)} fullWidth maxWidth="md">
+        <DialogTitle>AI review</DialogTitle>
+        <DialogContent>
+          {reviewBusy ? (
+            <Stack direction="row" alignItems="center" spacing={2} sx={{ py: 4 }}>
+              <CircularProgress size={18} />
+              <Typography color="text.secondary">Reviewing against Ofsted…</Typography>
+            </Stack>
+          ) : (
+            <Typography sx={{ whiteSpace: "pre-wrap" }}>{reviewBody || "No feedback yet."}</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setReviewOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import {
   Add as AddIcon,
+  AutoAwesome as AiIcon,
   Delete as DeleteIcon,
   Download as DownloadIcon,
   QuizOutlined as QuizIcon,
@@ -33,6 +34,8 @@ import { db } from "../../db/db";
 import type { Question } from "../../db/schema";
 import { QUESTION_TYPES, type QuestionType } from "../../constants";
 import { downloadBlob } from "../../db/io";
+import { generateQuiz } from "../../features/assistant/tools";
+import { getCachedKey } from "../../features/assistant/secureKey";
 
 function QuestionDialog({
   moduleId,
@@ -192,6 +195,13 @@ export function AssessmentsPage(): React.ReactElement {
   const [qOpen, setQOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiTopic, setAiTopic] = useState("");
+  const [aiCount, setAiCount] = useState("5");
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const hasKey = !!getCachedKey();
+
   const questions = useLiveQuery(
     async () =>
       moduleId ? await db.questions.where("moduleId").equals(moduleId).toArray() : [],
@@ -205,6 +215,42 @@ export function AssessmentsPage(): React.ReactElement {
       else n.add(id);
       return n;
     });
+  }
+
+  async function generateWithAi() {
+    if (!moduleId) return;
+    const module = modules?.find((m) => m.id === moduleId);
+    if (!module) return;
+    setAiBusy(true);
+    setAiError(null);
+    try {
+      const generated = await generateQuiz({
+        moduleName: module.name,
+        count: Math.max(1, Math.min(20, Number(aiCount) || 5)),
+        topic: aiTopic || undefined,
+      });
+      const rows: Question[] = generated.map((g) => ({
+        id: nanoid(8),
+        moduleId,
+        sessionId: null,
+        type: g.type,
+        prompt: g.prompt,
+        options: g.options ?? [],
+        answer: g.answer ?? "",
+        explanation: g.explanation ?? "",
+        difficulty: g.difficulty ?? "medium",
+        tags: ["ai-generated"],
+        createdAt: Date.now(),
+      }));
+      await db.questions.bulkPut(rows);
+      setAiOpen(false);
+      setAiTopic("");
+      setMessage(`Added ${rows.length} AI-generated question${rows.length === 1 ? "" : "s"}.`);
+    } catch (e) {
+      setAiError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setAiBusy(false);
+    }
   }
 
   async function createAssessment() {
@@ -270,6 +316,15 @@ export function AssessmentsPage(): React.ReactElement {
         </TextField>
         <Button startIcon={<AddIcon />} variant="outlined" disabled={!moduleId} onClick={() => setQOpen(true)}>
           Add question
+        </Button>
+        <Button
+          startIcon={<AiIcon />}
+          variant="outlined"
+          disabled={!moduleId || !hasKey}
+          onClick={() => setAiOpen(true)}
+          title={hasKey ? "Generate questions with Claude" : "Add an Anthropic key in Settings first"}
+        >
+          Generate with AI
         </Button>
         <Button
           startIcon={<QuizIcon />}
@@ -385,6 +440,45 @@ export function AssessmentsPage(): React.ReactElement {
       {qOpen && (
         <QuestionDialog moduleId={moduleId} open={qOpen} onClose={() => setQOpen(false)} />
       )}
+
+      <Dialog open={aiOpen} onClose={() => setAiOpen(false)} fullWidth maxWidth="sm">
+        <DialogTitle>Generate questions with AI</DialogTitle>
+        <DialogContent>
+          <Typography color="text.secondary" sx={{ mb: 2 }}>
+            The assistant uses this module's name and your courses context.
+            Optionally narrow to a topic. Generated questions are added with an
+            <code>ai-generated</code> tag so you can review and edit them
+            before building an assessment.
+          </Typography>
+          <Stack spacing={2}>
+            <TextField
+              label="Topic (optional)"
+              value={aiTopic}
+              onChange={(e) => setAiTopic(e.target.value)}
+              fullWidth
+              placeholder="e.g. Five Freedoms and their indicators"
+            />
+            <TextField
+              label="How many questions?"
+              value={aiCount}
+              onChange={(e) => setAiCount(e.target.value.replace(/[^0-9]/g, ""))}
+              inputMode="numeric"
+              sx={{ width: 180 }}
+            />
+          </Stack>
+          {aiError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {aiError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAiOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={() => void generateWithAi()} disabled={aiBusy || !moduleId}>
+            {aiBusy ? "Generating…" : "Generate"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
