@@ -50,8 +50,8 @@ chmod +x *.sh *.py
 # Check all files are present
 ls -lh ~/Desktop/main/
 
-# Test whisper
-python -c "import whisper; print('Whisper installed successfully')"
+# Test whisper (no output = success!)
+python -c "import whisper"
 
 # Test ffmpeg
 ffmpeg -version | head -1
@@ -59,8 +59,10 @@ ffmpeg -version | head -1
 
 You should see:
 - ✅ 5 files in ~/Desktop/main
-- ✅ "Whisper installed successfully"
+- ✅ Whisper import shows NO output (that means it works!)
 - ✅ FFmpeg version info
+
+**Note:** When testing `python -c "import whisper"`, if you see NO output and just get your prompt back, that's GOOD! It means whisper is working. You only see errors if something is wrong.
 
 ---
 
@@ -215,14 +217,33 @@ python ~/Desktop/main/transcribe.py "FILE.mp3" --model medium
 
 ### "Error: whisper is not installed"
 
+**Solution 1: Install with correct Python**
+```bash
+python -m pip install openai-whisper
+```
+
+**Solution 2: If using Anaconda (you see `(base)` in prompt)**
 ```bash
 pip install openai-whisper
+python -c "import whisper"  # Test - no output means success!
+```
+
+**Solution 3: If torch is broken (ImportError: dlopen...libtorch_cpu.dylib)**
+```bash
+pip uninstall torch
+pip install torch
+python -c "import whisper"  # Should show nothing if it works
 ```
 
 ### "Error: ffmpeg not found"
 
 ```bash
 brew install ffmpeg
+```
+
+If brew isn't installed:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
 ### NumPy version conflicts
@@ -241,7 +262,7 @@ ls ~/Desktop/main/
 ### Check if everything is working
 
 ```bash
-# Check whisper
+# Check whisper (no output = success!)
 python -c "import whisper"
 
 # Check ffmpeg
@@ -249,7 +270,27 @@ ffmpeg -version
 
 # Check tools exist
 ls ~/Desktop/main/
+
+# Verify you have 5 files:
+# - transcribe.py
+# - mp4_to_mp3.py  
+# - file_compressor.py
+# - quick_transcribe.sh
+# - process_podcast.sh
 ```
+
+### Test with a sample file
+
+```bash
+# Quick test transcription
+~/Desktop/main/quick_transcribe.sh "/Users/origininem/Downloads/YOUR_AUDIO_FILE.m4a"
+```
+
+**Expected behavior:**
+1. Shows "Loading Whisper 'tiny' model..." (first time downloads ~75 MB model)
+2. Shows transcription progress
+3. Creates `.txt` file in same folder as audio
+4. Opens transcript automatically
 
 ---
 
