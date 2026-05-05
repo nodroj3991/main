@@ -1,8 +1,41 @@
 # Utility Tools Collection
 
-A collection of useful command-line tools written in Python.
+A collection of useful command-line tools written in Python and Bash.
 
-## Tools
+## Quick Start Scripts (Easiest to Use!)
+
+### Quick Transcribe - Simple Audio to Text
+
+Drag and drop any audio/video file to convert speech to text instantly!
+
+```bash
+./quick_transcribe.sh "/Users/origininem/Downloads/audio.mp3"
+```
+
+**What it does:**
+- Transcribes any audio/video file to text
+- Uses fast AI model for quick results
+- Automatically opens the transcript when done
+
+### Process Podcast - Complete Workflow
+
+Full automation for podcast/meeting processing!
+
+```bash
+./process_podcast.sh "/Users/origininem/Downloads/Sitting down with Scholars 29.mp4"
+```
+
+**What it does:**
+1. ✅ Converts MP4 video to MP3 audio (if needed)
+2. ✅ Compresses to under 31 MB (if needed)
+3. ✅ Transcribes to text with timestamps
+4. ✅ Opens transcript automatically
+
+**Perfect for:** Podcasts, meetings, interviews, lectures
+
+---
+
+## Individual Tools
 
 ### 1. Task Manager CLI
 
