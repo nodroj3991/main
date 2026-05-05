@@ -46,22 +46,40 @@ echo ""
 cd "$TOOLS_DIR"
 python transcribe.py "$INPUT_FILE" --model tiny
 
-# Check if successful
-if [ $? -eq 0 ]; then
+# Get output file name (same as input but with .txt extension)
+OUTPUT_FILE="${INPUT_FILE%.*}.txt"
+
+# Check if output file was actually created
+if [ -f "$OUTPUT_FILE" ]; then
     echo ""
     echo "=================================================="
     echo "✅ TRANSCRIPTION COMPLETE!"
     echo "=================================================="
-
-    # Get output file name (same as input but with .txt extension)
-    OUTPUT_FILE="${INPUT_FILE%.*}.txt"
     echo "📄 Transcript saved to:"
     echo "   $OUTPUT_FILE"
     echo ""
-    echo "Opening transcript..."
-    open "$OUTPUT_FILE"
+
+    # Get file size
+    FILE_SIZE=$(stat -f%z "$OUTPUT_FILE" 2>/dev/null || stat -c%s "$OUTPUT_FILE" 2>/dev/null)
+    if [ "$FILE_SIZE" -gt 100 ]; then
+        echo "Opening transcript..."
+        open "$OUTPUT_FILE"
+    else
+        echo "⚠️  Warning: Transcript file seems empty or very small"
+        echo "   Size: $FILE_SIZE bytes"
+    fi
 else
     echo ""
-    echo "❌ Transcription failed. Check the error above."
+    echo "=================================================="
+    echo "❌ TRANSCRIPTION FAILED"
+    echo "=================================================="
+    echo ""
+    echo "Common issues:"
+    echo "  1. Whisper not installed: pip install openai-whisper"
+    echo "  2. FFmpeg not installed: brew install ffmpeg"
+    echo "  3. NumPy version conflict: pip install 'numpy<2'"
+    echo ""
+    echo "Expected output: $OUTPUT_FILE"
+    echo "File was not created. Check the error messages above."
     exit 1
 fi
