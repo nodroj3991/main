@@ -23,8 +23,15 @@ if [ ! -f "$INPUT_FILE" ]; then
     exit 1
 fi
 
-# Get script directory
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Set tools directory (change this if you moved the tools to a different location)
+TOOLS_DIR="$HOME/Desktop/main"
+
+# Check if tools directory exists
+if [ ! -d "$TOOLS_DIR" ]; then
+    echo "❌ Error: Tools directory not found: $TOOLS_DIR"
+    echo "Please update the TOOLS_DIR variable in this script to point to your tools location"
+    exit 1
+fi
 
 echo "=================================================="
 echo "🎙️  QUICK TRANSCRIBE"
@@ -36,7 +43,7 @@ echo "This will take a few minutes depending on file length."
 echo ""
 
 # Run transcription using the tiny model (fastest)
-cd "$SCRIPT_DIR"
+cd "$TOOLS_DIR"
 python transcribe.py "$INPUT_FILE" --model tiny
 
 # Check if successful
