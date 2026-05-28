@@ -1,8 +1,28 @@
 # Utility Tools Collection
 
-A collection of useful command-line tools written in Python and Bash.
+A collection of useful command-line tools and GUI applications for audio/video processing.
 
-## Quick Start Scripts (Easiest to Use!)
+## 🖥️ NEW! Graphical User Interface
+
+**No Terminal commands needed!** Use the easy GUI for drag-and-drop transcription.
+
+### Quick Launch:
+```bash
+~/Desktop/main/launch_gui.sh
+```
+
+**Features:**
+- 🖱️ Drag and drop files
+- 🎯 One-click operations
+- 📊 Real-time progress display
+- 📝 Automatic transcript opening
+- 🎨 User-friendly interface
+
+**See:** `GUI_GUIDE.md` for complete instructions
+
+---
+
+## Quick Start Scripts (Command Line)
 
 ### Quick Transcribe - Simple Audio to Text
 
