@@ -128,9 +128,14 @@ class AudioTranscriptionGUI:
         )
         self.output_text.insert("1.0", help_text)
 
-        # Drag and drop (macOS/Linux)
-        self.root.drop_target_register(tk.DND_FILES)
-        self.root.dnd_bind('<<Drop>>', self.on_drop)
+        # Drag and drop (requires tkinterdnd2, optional)
+        try:
+            self.root.drop_target_register(tk.DND_FILES)
+            self.root.dnd_bind('<<Drop>>', self.on_drop)
+        except (AttributeError, tk.TclError):
+            # Drag and drop not available, that's okay
+            # Users can still use the Browse button
+            pass
 
     def on_drop(self, event):
         """Handle drag and drop"""
