@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -34,12 +34,13 @@ export function ModuleSpecsPage(): React.ReactElement {
   const [message, setMessage] = useState<string | null>(null);
   const [selection, setSelection] = useState("");
 
-  // Sync loaded spec into the editable draft when module changes.
+  // Hydrate the editable draft when the selected module's stored spec loads
+  // or the selection changes; user edits after that are left alone.
+  useEffect(() => {
+    setDraftHtml(spec?.bodyHtml ?? "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moduleId, spec?.id]);
   const draftMatchesSpec = spec?.bodyHtml === draftHtml;
-  if (spec && !draftHtml) {
-    // initial hydrate
-    setDraftHtml(spec.bodyHtml);
-  }
 
   async function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
     setError(null);

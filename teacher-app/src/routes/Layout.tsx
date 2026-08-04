@@ -15,6 +15,7 @@ import {
 import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
+  HelpOutline as GuideIcon,
   School as SchoolIcon,
   MenuBook as MenuBookIcon,
   ListAlt as ListAltIcon,
@@ -33,6 +34,7 @@ import {
   ImportExport as IoIcon,
 } from "@mui/icons-material";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 const DRAWER_WIDTH = 260;
 
@@ -42,7 +44,10 @@ type NavSection = { title: string; items: NavItem[] };
 const sections: NavSection[] = [
   {
     title: "Overview",
-    items: [{ to: "/", label: "Dashboard", icon: <DashboardIcon /> }],
+    items: [
+      { to: "/", label: "Dashboard", icon: <DashboardIcon /> },
+      { to: "/guide", label: "Step-by-step Guide", icon: <GuideIcon /> },
+    ],
   },
   {
     title: "Courses & planning",
@@ -177,7 +182,9 @@ export function Layout(): React.ReactElement {
         }}
       >
         <Toolbar variant="dense" />
-        <Outlet />
+        <ErrorBoundary key={pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </Box>
     </Box>
   );

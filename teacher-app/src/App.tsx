@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { theme } from "./theme";
 import { Layout } from "./routes/Layout";
 import { Dashboard } from "./routes/Dashboard";
+import { GuidePage } from "./routes/GuidePage";
 import { CoursesPage } from "./routes/courses/CoursesPage";
 import { ModuleSpecsPage } from "./routes/courses/ModuleSpecsPage";
 import { CourseOutlinesPage } from "./routes/courses/CourseOutlinesPage";
@@ -38,6 +39,7 @@ export default function App(): React.ReactElement {
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<Dashboard />} />
+            <Route path="guide" element={<GuidePage />} />
             <Route path="courses" element={<CoursesPage />} />
             <Route path="specs" element={<ModuleSpecsPage />} />
             <Route path="outlines" element={<CourseOutlinesPage />} />

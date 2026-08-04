@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Link } from "react-router-dom";
 import { db } from "../db/db";
@@ -72,11 +72,23 @@ export function Dashboard(): React.ReactElement {
       <Typography variant="h1" gutterBottom>
         Dashboard
       </Typography>
-      <Typography color="text.secondary" sx={{ mb: 3 }}>
+      <Typography color="text.secondary" sx={{ mb: 2 }}>
         Welcome to TOPS. All data lives locally in your browser — use Import /
         Export to move it between machines. Seeded with a demo Animal Welfare
         module on first load so you can explore right away.
       </Typography>
+      <Alert
+        severity="info"
+        sx={{ mb: 3, alignItems: "center" }}
+        action={
+          <Button component={Link} to="/guide" variant="contained" size="small">
+            Open the guide
+          </Button>
+        }
+      >
+        New here? The Step-by-step Guide walks you through everything in plain
+        English and ticks each step off as you complete it.
+      </Alert>
       <Grid container spacing={2}>
         <Grid size={{ xs: 6, md: 3 }}>
           <StatCard label="Courses" value={counts?.courses ?? "…"} to="/courses" />

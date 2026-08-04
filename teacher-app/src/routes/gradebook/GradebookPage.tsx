@@ -184,13 +184,19 @@ export function GradebookPage(): React.ReactElement {
                   return (
                     <TableCell key={t} align="right">
                       <TextField
-                        value={g?.marks ?? ""}
-                        onChange={(e) => {
-                          const v = e.target.value;
+                        key={`${s.id}-${t}-${g?.marks ?? "empty"}`}
+                        defaultValue={g?.marks ?? ""}
+                        onBlur={(e) => {
+                          const v = e.target.value.trim().replace(",", ".");
                           if (v === "") {
                             void setMark(s.id, t, null);
-                          } else if (/^\d+(\.\d+)?$/.test(v)) {
-                            void setMark(s.id, t, Number(v));
+                            return;
+                          }
+                          const n = Number(v);
+                          if (Number.isFinite(n)) {
+                            void setMark(s.id, t, n);
+                          } else {
+                            e.target.value = g?.marks != null ? String(g.marks) : "";
                           }
                         }}
                         size="small"

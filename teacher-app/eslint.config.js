@@ -18,5 +18,13 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // These two React-Compiler-era rules flag the "hydrate an editable form
+      // from IndexedDB" pattern used across the editor pages. The pattern is
+      // intentional (Dexie liveQuery -> local editable draft), so keep the
+      // rules visible as warnings rather than hard errors.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/purity': 'warn',
+    },
   },
 ])

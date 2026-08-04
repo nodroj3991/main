@@ -134,8 +134,12 @@ export function TemplatesPage(): React.ReactElement {
             <TableRow key={t.id} hover>
               <TableCell>
                 <TextField
-                  value={t.name}
-                  onChange={(e) => void updateTemplate(t.id, { name: e.target.value })}
+                  key={`${t.id}-${t.name}`}
+                  defaultValue={t.name}
+                  onBlur={(e) => {
+                    const v = e.target.value.trim();
+                    if (v && v !== t.name) void updateTemplate(t.id, { name: v });
+                  }}
                   size="small"
                   variant="standard"
                   fullWidth

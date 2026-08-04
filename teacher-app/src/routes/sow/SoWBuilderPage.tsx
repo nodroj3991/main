@@ -36,8 +36,12 @@ export function SoWBuilderPage(): React.ReactElement {
   );
 
   const [draft, setDraft] = useState<SchemeOfWork | null>(null);
+  const [activeRowId, setActiveRowId] = useState<string | null>(null);
   useEffect(() => {
-    if (scheme && !draft) setDraft(scheme);
+    if (scheme && (!draft || draft.id !== scheme.id)) {
+      setDraft(scheme);
+      setActiveRowId(null);
+    }
   }, [scheme, draft]);
 
   if (!scheme || !draft) {
@@ -202,7 +206,12 @@ export function SoWBuilderPage(): React.ReactElement {
             </TableHead>
             <TableBody>
               {draft.rows.map((r) => (
-                <TableRow key={r.id}>
+                <TableRow
+                  key={r.id}
+                  selected={activeRowId === r.id}
+                  onClick={() => setActiveRowId(r.id)}
+                  sx={{ cursor: "pointer" }}
+                >
                   <TableCell>
                     <TextField
                       value={r.weekOrDate}
@@ -269,9 +278,11 @@ export function SoWBuilderPage(): React.ReactElement {
                   <TableCell>
                     <IconButton
                       size="small"
-                      onClick={() =>
-                        setDraft({ ...draft, rows: draft.rows.filter((x) => x.id !== r.id) })
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (activeRowId === r.id) setActiveRowId(null);
+                        setDraft({ ...draft, rows: draft.rows.filter((x) => x.id !== r.id) });
+                      }}
                     >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
@@ -287,7 +298,9 @@ export function SoWBuilderPage(): React.ReactElement {
             Available syllabus points
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            Click a row above to focus, then click a point here to attach it.
+            {activeRowId
+              ? `Attaching to: ${draft.rows.find((r) => r.id === activeRowId)?.weekOrDate ?? "selected week"}. Click a point to add it.`
+              : "First click a week row on the left to select it, then click a point here to attach it to that week."}
           </Typography>
           <Stack spacing={0.5}>
             {availablePoints.length === 0 && (
@@ -297,10 +310,11 @@ export function SoWBuilderPage(): React.ReactElement {
               <Chip
                 key={p.id}
                 label={`${p.code ? p.code + " · " : ""}${p.text}`}
+                disabled={!activeRowId && draft.rows.length === 0}
                 onClick={() => {
-                  const lastRow = draft.rows[draft.rows.length - 1];
-                  if (lastRow) attachPoint(lastRow.id, p.id);
-                  else alert("Add a week first.");
+                  const target = activeRowId ?? draft.rows[draft.rows.length - 1]?.id;
+                  if (target) attachPoint(target, p.id);
+                  else alert("Add a week first using the Add week button.");
                 }}
                 sx={{ justifyContent: "flex-start", height: "auto", py: 0.5, "& .MuiChip-label": { whiteSpace: "normal" } }}
               />

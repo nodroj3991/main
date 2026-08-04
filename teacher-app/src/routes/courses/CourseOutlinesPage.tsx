@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -34,7 +34,12 @@ export function CourseOutlinesPage(): React.ReactElement {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  if (outline && !draftHtml) setDraftHtml(outline.bodyHtml);
+  // Hydrate the editable draft when the selection or its stored outline
+  // changes; user edits after that are left alone.
+  useEffect(() => {
+    setDraftHtml(outline?.bodyHtml ?? "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId, outline?.id]);
 
   const headings = draftHtml ? headingsFromHtml(draftHtml) : [];
 
