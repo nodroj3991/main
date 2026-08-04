@@ -1,0 +1,51 @@
+name: Build and publish teacher-app to gh-pages
+
+on:
+  push:
+    branches:
+      - claude/teacher-app-interface-gyp2V
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: teacher-app/package-lock.json
+
+      - name: Install
+        working-directory: teacher-app
+        run: npm ci
+
+      - name: Build
+        working-directory: teacher-app
+        run: npm run build
+
+      - name: Add SPA fallback (for direct route loads)
+        working-directory: teacher-app
+        run: cp dist/index.html dist/404.html
+
+      - name: Disable Jekyll (so files starting with _ are served)
+        working-directory: teacher-app
+        run: touch dist/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: teacher-app/dist
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: "Publish teacher-app build (${{ github.sha }})"
