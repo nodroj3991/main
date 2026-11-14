@@ -21,3 +21,6 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Content agent secrets
+content-agent/.env
