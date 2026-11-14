@@ -31,6 +31,7 @@ export function GuidePage(): React.ReactElement {
       .filter((s) => Object.values(s.phases).some((p) => p.trim().length > 0))
       .count();
     const schemesWithRows = await db.schemes.filter((s) => s.rows.length > 0).count();
+    const tutorSessions = await db.tutorSessions.count();
     return {
       courses,
       modules,
@@ -42,6 +43,7 @@ export function GuidePage(): React.ReactElement {
       sessions,
       sessionsWithContent,
       templates,
+      tutorSessions,
       hasKey: !!settings?.encryptedAnthropicKey,
     };
   }, []);
@@ -127,6 +129,22 @@ export function GuidePage(): React.ReactElement {
       to: "/settings",
       toLabel: "Open Settings",
       done: counts.hasKey,
+      optional: true,
+    },
+    {
+      title: "Let a student try the out-of-hours tutor",
+      body: "Open the Student Tutor page, pick the student's name and module, and hand over. The tutor coaches — it never gives answers, it asks questions and breaks the method down. Every chat is saved for you. Needs the AI key from the previous step.",
+      to: "/tutor",
+      toLabel: "Open Student Tutor",
+      done: counts.tutorSessions > 0,
+      optional: true,
+    },
+    {
+      title: "Read your tutor reports",
+      body: "Once students have used the tutor, generate a progress report for any student, or a class teaching report that shows which weeks of your scheme need restructuring and how to improve delivery.",
+      to: "/tutor-reports",
+      toLabel: "Open Tutor Reports",
+      done: null,
       optional: true,
     },
     {

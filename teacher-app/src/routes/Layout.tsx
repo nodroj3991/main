@@ -30,6 +30,8 @@ import {
   CheckCircle as AttendanceIcon,
   Description as TemplateIcon,
   SmartToy as AssistantIcon,
+  SupportAgent as SchoolTutorIcon,
+  Assessment as ReportIcon,
   Settings as SettingsIcon,
   ImportExport as IoIcon,
 } from "@mui/icons-material";
@@ -76,6 +78,13 @@ const sections: NavSection[] = [
       { to: "/timetable", label: "Timetable", icon: <CalendarIcon /> },
       { to: "/gradebook", label: "Gradebook", icon: <GradeIcon /> },
       { to: "/attendance", label: "Attendance", icon: <AttendanceIcon /> },
+    ],
+  },
+  {
+    title: "Out-of-hours Tutor",
+    items: [
+      { to: "/tutor", label: "Student Tutor", icon: <SchoolTutorIcon /> },
+      { to: "/tutor-reports", label: "Tutor Reports", icon: <ReportIcon /> },
     ],
   },
   {

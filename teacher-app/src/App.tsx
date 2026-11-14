@@ -23,6 +23,8 @@ import { GradebookPage } from "./routes/gradebook/GradebookPage";
 import { AttendancePage } from "./routes/attendance/AttendancePage";
 import { TemplatesPage } from "./routes/templates/TemplatesPage";
 import { AssistantPage } from "./routes/assistant/AssistantPage";
+import { TutorPage } from "./routes/tutor/TutorPage";
+import { TutorReportsPage } from "./routes/tutor/TutorReportsPage";
 import { DataIoPage } from "./routes/data/DataIoPage";
 import { SettingsPage } from "./routes/settings/SettingsPage";
 import { ensureSettings, seedDemoIfEmpty } from "./db/seed";
@@ -58,6 +60,8 @@ export default function App(): React.ReactElement {
             <Route path="attendance" element={<AttendancePage />} />
             <Route path="templates" element={<TemplatesPage />} />
             <Route path="assistant" element={<AssistantPage />} />
+            <Route path="tutor" element={<TutorPage />} />
+            <Route path="tutor-reports" element={<TutorReportsPage />} />
             <Route path="data" element={<DataIoPage />} />
             <Route path="settings" element={<SettingsPage />} />
           </Route>

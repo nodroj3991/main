@@ -19,6 +19,8 @@ import type {
   Student,
   SyllabusPoint,
   Template,
+  TutorReport,
+  TutorSession,
 } from "./schema";
 
 export class TeacherAppDB extends Dexie {
@@ -41,6 +43,8 @@ export class TeacherAppDB extends Dexie {
   grades!: Table<Grade, string>;
   attendance!: Table<AttendanceRecord, string>;
   settings!: Table<Settings, string>;
+  tutorSessions!: Table<TutorSession, string>;
+  tutorReports!: Table<TutorReport, string>;
 
   constructor() {
     super("teacher-app");
@@ -64,6 +68,11 @@ export class TeacherAppDB extends Dexie {
       grades: "id, studentId, moduleId, recordedAt",
       attendance: "id, groupId, sessionId, date, recordedAt",
       settings: "id",
+    });
+    // v2: out-of-hours tutor (session transcripts + generated reports).
+    this.version(2).stores({
+      tutorSessions: "id, moduleId, groupId, studentId, studentName, startedAt",
+      tutorReports: "id, kind, moduleId, studentName, generatedAt",
     });
   }
 }

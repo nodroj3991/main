@@ -287,6 +287,41 @@ export const attendanceRecordSchema = z.object({
 });
 export type AttendanceRecord = z.infer<typeof attendanceRecordSchema>;
 
+export const tutorTurnSchema = z.object({
+  role: z.enum(["student", "tutor"]),
+  content: z.string(),
+  at: z.number(),
+});
+export type TutorTurn = z.infer<typeof tutorTurnSchema>;
+
+export const tutorSessionSchema = z.object({
+  id: idSchema,
+  studentId: idSchema.nullable().default(null),
+  studentName: z.string(),
+  groupId: idSchema.nullable().default(null),
+  moduleId: idSchema.nullable().default(null),
+  topic: z.string().default(""),
+  turns: z.array(tutorTurnSchema).default([]),
+  summary: z.string().default(""),
+  struggles: z.array(z.string()).default([]),
+  breakthroughs: z.array(z.string()).default([]),
+  startedAt: z.number(),
+  endedAt: z.number().nullable().default(null),
+});
+export type TutorSession = z.infer<typeof tutorSessionSchema>;
+
+export const tutorReportSchema = z.object({
+  id: idSchema,
+  kind: z.enum(["student-progress", "class-teaching"]),
+  title: z.string(),
+  studentName: z.string().default(""),
+  moduleId: idSchema.nullable().default(null),
+  body: z.string(),
+  sourceSessionIds: z.array(idSchema).default([]),
+  generatedAt: z.number(),
+});
+export type TutorReport = z.infer<typeof tutorReportSchema>;
+
 export const settingsSchema = z.object({
   id: z.literal("settings"),
   preferredModel: z.string().default("claude-sonnet-4-6"),
