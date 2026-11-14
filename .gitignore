@@ -21,3 +21,11 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Node / Expo (teacher-app)
+teacher-app/node_modules/
+teacher-app/.expo/
+teacher-app/dist/
+teacher-app/web-build/
+teacher-app/.env
+teacher-app/.env.*.local

@@ -1,0 +1,12 @@
+As a teacher I would like to be able to choose an option from a screen/ menu (e.g. Module specification, Course outlne, etc) and then be able to edit it in a full screen environment.
+
+As a teacher I would like to be able to select sections of a docu,emt (e.g. Mod Spec) and save that as a reusable piece of text (e.g. leraning outcome) - I'd like to be able to name it as such as well.
+
+As a teacher I'd liek to be able to import my course outline (in word format) and use that to create the structure of my slides in PPT (e.g. each heading 1 creates a new slide, etc)
+
+As a teacher I'd like to be able to pull together all the questions I asked as part of my lectures and format them to create an assessment sheet - this would also allow me to select what kind of question I would use (e.g. multi choice or match answers, etc)
+
+As a teacher I would like to be able to import my reading list or references as a list of URLs and get the system to format them into properly referenced list (e.g. - harvard - see uploaded lists)
+
+As a teacher I'd like to be able to import a list of DOIs and for the system to look them up and convert them to properly referenced lists
+
