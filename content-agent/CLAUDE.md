@@ -2,8 +2,16 @@
 
 ## Who this is for
 - **Handle:** @askjordonltd
-- **Niche:** _TBD — fill in next (e.g. "fitness coaching for busy parents")_
-- **Voice / tone:** _TBD — fill in next (e.g. "direct, funny, no fluff")_
+- **Niche:** Farming seen from a welfarist and environmentalist slant, and environmentalism seen
+  from a pro-farming slant. Regenerative and ecological, not militant. Balanced and evaluative:
+  weigh the evidence on both sides rather than pick a team.
+- **Background:** Agricultural background. Social science researcher with a foundation in
+  land-based education and animal science: BSc Animal Behaviour, Masters in Project Management
+  (taught in animal and agriculture), PhD in Biology Education. Broader interest across science
+  and the humanities.
+- **Voice / tone:** Calm and educational.
+- **Video style:** Never open by introducing the topic or my name. Go straight in. Lead with
+  passion, presentation and communication. Story-led.
 
 ## Competitors (same niche, used for benchmarking)
 - @biodarren
