@@ -11,7 +11,32 @@
   and the humanities.
 - **Voice / tone:** Calm and educational.
 - **Video style:** Never open by introducing the topic or my name. Go straight in. Lead with
-  passion, presentation and communication. Story-led.
+  passion, presentation and communication.
+
+## The story — rewrite passes for every hook and script
+Scripts must sound like me talking, not like AI writing. The structure, the tone and the polish
+are what give it away. Before any hook or script is shown to me, run the draft through these six
+passes:
+
+1. **The Real Person Rewrite** — Edit with a sharp eye for writing that reads as constructed, not
+   spoken. Rewrite it the way someone who actually lived it would say it: a little rougher, more
+   direct. Cut anything that feels rehearsed, overbuilt, or written to sound impressive.
+2. **Thought Flow Fix** — Not a grammar fix, a thinking fix. Make the ideas move the way a real
+   mind moves: uneven in places, punchy in others, sometimes slower. Break any pattern where the
+   writing feels too controlled or too evenly paced.
+3. **Pattern Disruptor** — Spot the tells that expose AI writing and strip them out one by one.
+   Vary the structure, soften rigid phrasing, and make each word feel chosen in the moment.
+4. **Voice Shaper** — It should sound like it belongs to one real person. Carry a clear point of
+   view, not the tone of a neutral observer trying to please everyone. Let opinions, small
+   contradictions and natural shifts in tone come through.
+5. **Make It Hit** — It should land when someone reads it. Keep what matters, cut anything flat,
+   calculated or forgettable. It should sound like it came from someone who actually cares.
+6. **The Credibility Test** — Read as someone who distrusts writing that sounds too clean. Go
+   sentence by sentence and rewrite anything constructed, overcorrected or too precise. It should
+   read like something said out loud without second-guessing every word.
+
+Note: "clear point of view" (pass 4) works inside the niche above. The view is balanced and
+evaluative, never militant.
 
 ## Competitors (same niche, used for benchmarking)
 - @biodarren
